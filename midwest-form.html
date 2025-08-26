@@ -34,12 +34,19 @@
       .ava-col,.ava-full{ flex:1 1 100% }
       .ava-form-wide h1{ font-size:24px }
       .g-recaptcha{ transform:scale(0.88); transform-origin:0 0 }
+      
+      /* Keep first/last name side by side on mobile to save space */
+      .ava-row:first-of-type .ava-col {
+        flex: 1 1 45%;
+        min-width: 120px;
+      }
     }
   </style>
 </head>
 <body>
 <div style="display:flex; justify-content:center; padding:10px;">
   <div class="ava-form-wide">
+   
 
     <!-- Button-gated submit -->
     <form id="WebToLeadForm" action="https://stsrecycling.sugarondemand.com/index.php?entryPoint=WebToLeadCapture" method="POST" name="WebToLeadForm">
