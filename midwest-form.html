@@ -148,7 +148,7 @@
 <script>
   // --- iframe auto-resize: tell parent our height ---
   function sendHeight(){
-    const h = 420; // Reduced height to fit content better
+    const h = 480; // Reduced height to fit content better
     window.parent && window.parent.postMessage({ type:"setFormHeight", height:h }, "*");
   }
   window.addEventListener("load", sendHeight);
