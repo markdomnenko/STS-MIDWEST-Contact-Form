@@ -35,7 +35,7 @@
       .ava-col,.ava-full{ flex:1 1 100% }
       .ava-form-wide h1{ font-size:18px }
       .g-recaptcha{ transform:scale(0.88); transform-origin:0 0 }
-      
+
       /* Keep first/last name side by side on mobile to save space */
       .ava-row:first-of-type .ava-col {
         flex: 1 1 45%;
@@ -45,7 +45,7 @@
   </style>
 </head>
 <body>
-<div style="display:flex; justify-content:center; align-items:center; min-height:100vh; padding:10px;">
+<div style="display:flex; justify-content:center; padding:10px;">
   <div class="ava-form-wide">
     <h1>Free Recycling Quote</h1>
 
@@ -90,7 +90,7 @@
         <input type="text" id="sic_code" name="sic_code" autocomplete="off" tabindex="-1" />
         <input type="email" id="confirm_email" name="confirm_email" autocomplete="off" tabindex="-1" />
         <input type="checkbox" id="subscribe_newsletter" name="subscribe_newsletter" tabindex="-1" />
-        
+
         <!-- All Sugar form fields hidden -->
         <input type="text" id="lead_source_description" name="lead_source_description" autocomplete="off" tabindex="-1" />
         <input type="text" id="account_description" name="account_description" autocomplete="off" tabindex="-1" />
@@ -148,7 +148,8 @@
 <script>
   // --- iframe auto-resize: tell parent our height ---
   function sendHeight(){
-    const h = 480; // Reduced height to fit content better
+    const h = 650; // Fixed height for better performance
+    const h = 420; // Reduced height to fit content better
     window.parent && window.parent.postMessage({ type:"setFormHeight", height:h }, "*");
   }
   window.addEventListener("load", sendHeight);
