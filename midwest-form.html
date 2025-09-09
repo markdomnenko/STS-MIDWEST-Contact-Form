@@ -4,14 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Lead Form</title>
+  
+  <!-- Preconnect for faster external resource loading -->
+  <link rel="preconnect" href="https://www.google.com">
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://stsrecycling.sugarondemand.com">
+  
   <style>
     .ava-form-wide {
       width: 100%;
       max-width: 960px;
-      background: #f7f9fc;
       padding: 8px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       font-family: 'Helvetica Neue', Arial, sans-serif;
       text-align: center;
       margin: 2px auto;
@@ -29,7 +32,6 @@
       background-color: #0069e1; color: #fff; border: none; border-radius: 6px; cursor: pointer; margin: 0 auto; display: block;
     }
     .ava-submit-btn:hover { background-color: #0057ba; }
-    .ava-hidden { position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none; }
     .ava-submit-btn:disabled { 
       background-color: #cccccc; 
       cursor: not-allowed; 
@@ -49,11 +51,10 @@
   </style>
 </head>
 <body>
-<div style="display:flex; justify-content:center; padding:10px;">
+<div style="display:flex; justify-content:center; align-items:center; min-height:100vh; padding:10px;">
   <div class="ava-form-wide">
     <h1>Free Recycling Quote</h1>
 
-    <!-- Button-gated submit -->
     <form id="WebToLeadForm" action="https://stsrecycling.sugarondemand.com/index.php?entryPoint=WebToLeadCapture" method="POST" name="WebToLeadForm">
       <div class="ava-row">
         <div class="ava-col">
@@ -101,16 +102,11 @@
         <input type="text" id="hint_account_description" name="hint_account_description" autocomplete="off" tabindex="-1" />
         <select id="lead_source" name="lead_source" tabindex="-1">
           <option selected="selected" value="Web Site">Web Site</option>
-          <option value="call_center">Marketing Call</option>
-          <option value="EmailCampaign">Email Campaign</option>
-          <option value="letter_campaign">Letter Campaign</option>
+          <option value="Marketing Call">Marketing Call</option>
+          <option value="Email Campaign">Email Campaign</option>
           <option value="Trade Show">Trade Show</option>
           <option value="Cold Call">Cold Call</option>
           <option value="Other">Other</option>
-          <option value="AutoSalvageYard">Auto Salvage Yard</option>
-          <option value="STS Recyling">STS Recycling</option>
-          <option value="Discount Computer Depot">Discount Computer Depot</option>
-          <option value="Lead Forensics">Lead Forensics</option>
           <option value="STS Recycling">STS Recycling</option>
         </select>
       </div>
@@ -135,9 +131,6 @@
       <div class="ava-row" style="align-items: center; justify-content: center; margin-top: 10px;">
         <div class="ava-col" style="flex: 0 0 auto;">
           <div class="g-recaptcha" data-sitekey="6Ld0cZIrAAAAAPgYU8rbR2gOP6FMdB1g-9e5uH1O" data-callback="onRecaptchaValidated" data-expired-callback="onRecaptchaExpired"></div>
-          <div id="recaptcha-container">
-            <div class="g-recaptcha" data-sitekey="6Ld0cZIrAAAAAPgYU8rbR2gOP6FMdB1g-9e5uH1O" data-callback="onRecaptchaValidated" data-expired-callback="onRecaptchaExpired"></div>
-          </div>
           <div id="recaptcha-feedback" style="display:none; color:#c0392b; margin:8px 0;">Please complete the reCAPTCHA verification.</div>
         </div>
         <div class="ava-col" style="flex: 0 0 auto;">
@@ -154,63 +147,28 @@
 <script>
   // --- iframe auto-resize: tell parent our height ---
   function sendHeight(){
-    const h = document.documentElement.scrollHeight || document.body.scrollHeight;
-    const h = 650; // Fixed height for better performance
+    const h = 420; // Fixed height for better performance
     window.parent && window.parent.postMessage({ type:"setFormHeight", height:h }, "*");
   }
   window.addEventListener("load", sendHeight);
   window.addEventListener("resize", sendHeight);
-  new MutationObserver(sendHeight).observe(document.body, { childList:true, subtree:true, attributes:true });
 
   // --- form protection state ---
   const MIN_SECONDS = 3;
   let formStartTime = Date.now();
   let isCaptchaValidated = false;
-  let keystrokes = 0, mouseMovements = 0;
-  let recaptchaLoaded = false;
   function rand(n){ return Math.random().toString(36).slice(2, 2 + (n||8)); }
 
-  // Lazy load reCAPTCHA when user first interacts with form
-  function loadRecaptcha() {
-    if (!recaptchaLoaded) {
-      const script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js';
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-      recaptchaLoaded = true;
-    }
-  }
-
-  // Load reCAPTCHA on first input focus
-  document.addEventListener('DOMContentLoaded', function() {
-    const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
-    inputs.forEach(input => {
-      input.addEventListener('focus', loadRecaptcha, { once: true });
-    });
-  });
-
   // reCAPTCHA callbacks
-  function onRecaptchaValidated(){ isCaptchaValidated = true; document.getElementById('recaptcha-feedback').style.display='none'; setSubmitEnabled(true); sendHeight(); }
-  function onRecaptchaExpired(){ isCaptchaValidated = false; document.getElementById('recaptcha-feedback').style.display='block'; setSubmitEnabled(false); sendHeight(); }
   function onRecaptchaValidated(){ 
     isCaptchaValidated = true; 
     document.getElementById('recaptcha-feedback').style.display='none'; 
-    setSubmitEnabled(true); 
     sendHeight(); 
   }
   function onRecaptchaExpired(){ 
     isCaptchaValidated = false; 
     document.getElementById('recaptcha-feedback').style.display='block'; 
-    setSubmitEnabled(false); 
     sendHeight(); 
-  }
-
-  function setSubmitEnabled(enabled){
-    const btn = document.querySelector('.ava-submit-btn');
-    btn.disabled = !enabled;
-    btn.style.opacity = enabled ? '1' : '0.6';
-    btn.style.cursor = enabled ? 'pointer' : 'not-allowed';
   }
 
   // Sugar's email validation function
@@ -240,9 +198,6 @@
     const elapsed = (Date.now() - formStartTime) / 1000;
     document.getElementById('form_submitted_at').value = String(Date.now());
     if (elapsed < MIN_SECONDS){ alert('Please take a moment to review your information.'); return false; }
-
-    // minimal human activity
-    if (keystrokes < 1 && mouseMovements < 1){ alert('Please ensure all fields are properly filled.'); return false; }
 
     // email format validation
     const email = document.getElementById('email').value;
@@ -314,20 +269,13 @@
   }
 
   // Initialize form
-  document.addEventListener('DOMContentLoaded', async function () {
-    setSubmitEnabled(false);
-    document.addEventListener('keydown', ()=> keystrokes++);
-    document.addEventListener('mousemove', ()=> mouseMovements++);
-
+  document.addEventListener('DOMContentLoaded', function () {
     // Capture referrer and set tracking fields
     const sourceUrl = document.referrer || window.location.href;
     document.getElementById('form_timestamp').value = String(Date.now());
     document.getElementById('form_rendered_at').value = String(formStartTime);
 
-    // Generate security tokens
-    const tokenName = 'tok_' + rand(6);
-    const tokenVal = [rand(6), Date.now().toString(36), rand(6)].join('.');
-    // Generate security tokens (simplified)
+    // Generate simplified security tokens
     const tokenName = 'tok_' + rand(4);
     const tokenVal = rand(8) + Date.now();
     document.getElementById('js_token_name').value = tokenName;
@@ -336,12 +284,6 @@
     // Auto-populate hidden Sugar fields
     document.getElementById('lead_source_description').value = sourceUrl;
     document.getElementById('account_description').value = "Online Lead";
-
-    try {
-      const res = await fetch("https://ipapi.co/json");
-      const data = await res.json();
-      if (data && data.city) document.getElementById('hint_account_description').value = data.city;
-    } catch(e){ console.error("IP location fetch failed."); }
 
     sendHeight();
   });
