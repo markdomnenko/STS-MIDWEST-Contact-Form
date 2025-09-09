@@ -163,13 +163,25 @@
   function onRecaptchaValidated(){ 
     isCaptchaValidated = true; 
     document.getElementById('recaptcha-feedback').style.display='none'; 
+    console.log('reCAPTCHA validated successfully');
     sendHeight(); 
   }
   function onRecaptchaExpired(){ 
     isCaptchaValidated = false; 
     document.getElementById('recaptcha-feedback').style.display='block'; 
+    console.log('reCAPTCHA expired');
     sendHeight(); 
   }
+
+  // Ensure reCAPTCHA loads properly
+  window.addEventListener('load', function() {
+    // Check if reCAPTCHA loaded
+    if (typeof grecaptcha === 'undefined') {
+      console.error('reCAPTCHA failed to load');
+    } else {
+      console.log('reCAPTCHA loaded successfully');
+    }
+  });
 
   // Sugar's email validation function
   function validateEmailAdd(){
