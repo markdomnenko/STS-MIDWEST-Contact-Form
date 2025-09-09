@@ -51,7 +51,7 @@
   </style>
 </head>
 <body>
-<div style="display:flex; justify-content:center; align-items:center; min-height:100vh; padding:10px;">
+<div style="display:flex; justify-content:center; padding:10px;">
   <div class="ava-form-wide">
     <h1>Free Recycling Quote</h1>
 
@@ -147,7 +147,7 @@
 <script>
   // --- iframe auto-resize: tell parent our height ---
   function sendHeight(){
-    const h = 500; // Fixed height for better performance
+    const h = 420; // Fixed height for better performance
     window.parent && window.parent.postMessage({ type:"setFormHeight", height:h }, "*");
   }
   window.addEventListener("load", sendHeight);
